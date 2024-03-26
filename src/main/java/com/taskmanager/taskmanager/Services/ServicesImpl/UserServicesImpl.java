@@ -1,10 +1,13 @@
 package com.taskmanager.taskmanager.Services.ServicesImpl;
 
+import com.taskmanager.taskmanager.Config.AppConstants;
+import com.taskmanager.taskmanager.Entity.Role;
 import com.taskmanager.taskmanager.Entity.Task;
 import com.taskmanager.taskmanager.Entity.User;
 import com.taskmanager.taskmanager.Exceptions.ResourceNotFoundException;
 import com.taskmanager.taskmanager.Payloads.TaskDto;
 import com.taskmanager.taskmanager.Payloads.UserDto;
+import com.taskmanager.taskmanager.Repository.RoleRepo;
 import com.taskmanager.taskmanager.Repository.TaskRepo;
 import com.taskmanager.taskmanager.Repository.UserRepo;
 import com.taskmanager.taskmanager.Services.UserServices;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +32,22 @@ public class UserServicesImpl implements UserServices {
     private ModelMapper modelMapper;
     @Autowired
     private TaskRepo taskRepo;
+    @Autowired
+    private RoleRepo roleRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDto registerNewUser(UserDto userDto) {
+        User user=this.modelMapper.map(userDto,User.class);
+        //encoded password
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        //roles
+        Role role= this.roleRepo.findById(AppConstants.NORMAL_USER).get();
+        user.getRoles().add(role);
+        User newUser=this.userRepo.save(user);
+        return this.modelMapper.map(newUser,UserDto.class);
+    }
     @Override
     public UserDto createUser(UserDto userDto) {
         User user=this.modelMapper.map(userDto,User.class);

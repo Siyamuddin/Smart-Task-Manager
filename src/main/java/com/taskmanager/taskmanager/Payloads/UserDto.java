@@ -6,9 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -19,6 +17,7 @@ public class UserDto {
     private String lastName;
     private String email;
     private String password;
+    private Set<RoleDto> roles=new HashSet<>();
 
 
 }

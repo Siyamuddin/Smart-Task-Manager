@@ -7,6 +7,7 @@ import com.taskmanager.taskmanager.Payloads.UserDto;
 import java.util.List;
 
 public interface UserServices {
+    UserDto registerNewUser(UserDto userDto);
     UserDto createUser(UserDto userDto);
     UserDto updateUser(UserDto userDto,Integer userId);
     void deleteUser(Integer userId);
