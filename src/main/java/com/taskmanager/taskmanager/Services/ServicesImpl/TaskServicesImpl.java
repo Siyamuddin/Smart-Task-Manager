@@ -39,7 +39,7 @@ public class TaskServicesImpl implements TaskService {
         task.setUser(user);
         Task createdTask=taskRepo.save(task);
 
-        String userEmail=user.getUserEmail();
+        String userEmail=user.getEmail();
         String taskTittle=taskDto.getTaskTitle();
         String taskDescription=taskDto.getTaskDescription();
 

@@ -15,9 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 public class UserDto {
     private Integer userId;
-    private String userName;
-    private String userEmail;
-    private String userPassword;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
 
 
 }

@@ -2,9 +2,7 @@ package com.taskmanager.taskmanager.Entity;
 
 import jakarta.persistence.*;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,14 +17,20 @@ import java.util.List;
 
 @Entity
 @Table(name="user")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userId;
     private String firstName;
     private String lastName;
-    private String userEmail;
-    private String userPassword;
+    private String email;
+    private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
     @CreationTimestamp
@@ -35,80 +39,7 @@ public class User implements UserDetails {
     private Date timeWhenLastUpdated;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     List<Task> taskList=new ArrayList<>();
-    public User() {
-    }
 
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Date getTimeWhenCreated() {
-        return timeWhenCreated;
-    }
-
-    public void setTimeWhenCreated(Date timeWhenCreated) {
-        this.timeWhenCreated = timeWhenCreated;
-    }
-
-    public Date getTimeWhenLastUpdated() {
-        return timeWhenLastUpdated;
-    }
-
-    public void setTimeWhenLastUpdated(Date timeWhenLastUpdated) {
-        this.timeWhenLastUpdated = timeWhenLastUpdated;
-    }
-
-    public List<Task> getTaskList() {
-        return taskList;
-    }
-
-    public void setTaskList(List<Task> taskList) {
-        this.taskList = taskList;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -117,12 +48,12 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userPassword;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return userEmail;
+        return email;
     }
 
     @Override

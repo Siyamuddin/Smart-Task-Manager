@@ -38,9 +38,10 @@ public class UserServicesImpl implements UserServices {
     @Override
     public UserDto updateUser(UserDto userDto,Integer userId) {
         User user=userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","user Id",userId));
-        user.setUserName(userDto.getUserName());
-        user.setUserEmail(userDto.getUserEmail());
-        user.setUserPassword(userDto.getUserPassword());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
         User updatedUser=userRepo.save(user);
 
         return modelMapper.map(updatedUser,UserDto.class);
@@ -79,7 +80,7 @@ public class UserServicesImpl implements UserServices {
     @Override
     public List<UserDto> searchUser(String keyword) {
 
-        List<User> users=userRepo.findByUserNameContaining(keyword);
+        List<User> users=userRepo.findByFirstNameContaining(keyword);
         List<UserDto> userDtos=users.stream().map((user)-> modelMapper.map(user,UserDto.class)).collect(Collectors.toList());
         return userDtos;
     }
