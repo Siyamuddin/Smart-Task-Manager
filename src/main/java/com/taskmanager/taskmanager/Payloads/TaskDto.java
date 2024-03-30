@@ -8,7 +8,6 @@ import lombok.Setter;
 import java.util.Date;
 
 public class TaskDto {
-    private Integer taskId;
     private String taskTitle;
     private String taskDescription;
     private Date deadline;
@@ -16,14 +15,6 @@ public class TaskDto {
     private UserDto user;
 
     public TaskDto() {
-    }
-
-    public Integer getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(Integer taskId) {
-        this.taskId = taskId;
     }
 
     public String getTaskTitle() {

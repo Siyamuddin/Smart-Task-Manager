@@ -3,6 +3,9 @@ package com.taskmanager.taskmanager.Controller;
 import com.taskmanager.taskmanager.Payloads.ApiResponse;
 import com.taskmanager.taskmanager.Payloads.TaskDto;
 import com.taskmanager.taskmanager.Services.TaskService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/task")
+@SecurityRequirement(name = "JWT-Auth")
+@Tag(name = "Tasks")
 public class TaskController {
     @Autowired
     private TaskService taskService;
@@ -42,7 +47,7 @@ public class TaskController {
     @GetMapping("/all")
     public ResponseEntity<List<TaskDto>> getAllTask(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
                                                     @RequestParam(value = "pageSize", defaultValue = "5",required = false) Integer pageSize,
-                                                    @RequestParam(value = "sortBy", defaultValue = "id",required = false) String sortBy,
+                                                    @RequestParam(value = "sortBy", defaultValue = "taskId",required = false) String sortBy,
                                                     @RequestParam(value = "sortDirect", defaultValue = "asc",required = false) String sortDirect){
         List<TaskDto> taskDtoList=taskService.getAllTask(pageNumber,pageSize,sortBy,sortDirect);
         return new ResponseEntity<List<TaskDto>>(taskDtoList,HttpStatus.OK);

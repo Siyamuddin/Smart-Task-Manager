@@ -12,12 +12,12 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class UserDto {
-    private Integer userId;
+
     private String firstName;
     private String lastName;
     private String email;
     private String password;
-    private Set<RoleDto> roles=new HashSet<>();
+//    private Set<RoleDto> roles=new HashSet<>();
 
 
 }

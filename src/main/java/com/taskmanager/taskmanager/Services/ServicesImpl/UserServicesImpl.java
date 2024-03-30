@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,8 @@ public class UserServicesImpl implements UserServices {
     private RoleRepo roleRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    UserDetailsService userDetailsService;
 
     @Override
     public UserDto registerNewUser(UserDto userDto) {
@@ -61,7 +64,7 @@ public class UserServicesImpl implements UserServices {
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User updatedUser=userRepo.save(user);
 
         return modelMapper.map(updatedUser,UserDto.class);
@@ -70,13 +73,12 @@ public class UserServicesImpl implements UserServices {
     @Override
     public void deleteUser(Integer userId) {
         User user=userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","user Id",userId));
-        userRepo.deleteById(userId);
+        userRepo.delete(user);
     }
 
     @Override
     public UserDto getUser(Integer userId) {
         User user=userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","user Id",userId));
-
         return modelMapper.map(user,UserDto.class);
     }
 

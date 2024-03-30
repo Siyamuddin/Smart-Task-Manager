@@ -29,15 +29,19 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class SecurityConfig {
     public static final String[] PUBLIC_URLS={
             "/auth/login/**",
-            "api/users/**",
             "/auth/register/**",
             "/v3/api-docs",
+            "/v3/api-docs/**",
             "/v2/api-docs",
-            "/home/**",
+            "/v2/api-docs/**",
             "/swagger-resources/**",
+            "/swagger-resources",
+            "/configuration/ui",
+            "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui/index.html"
+            "/swagger-ui/index.html",
+            "/swagger-ui.html"
     };
     @Autowired
     private JwtAuthenticationEntryPoint point;
@@ -51,8 +55,7 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .authorizeRequests()
-                .requestMatchers("/auth/login/**").permitAll()
-                .requestMatchers("/auth/register/**").permitAll()
+                .requestMatchers(PUBLIC_URLS).permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
