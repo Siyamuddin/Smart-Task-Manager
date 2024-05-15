@@ -38,12 +38,9 @@ public class TaskServicesImpl implements TaskService {
         Task task=modelMapper.map(taskDto,Task.class);
         task.setUser(user);
         Task createdTask=taskRepo.save(task);
-
         String userEmail=user.getEmail();
         String taskTittle=taskDto.getTaskTitle();
         String taskDescription=taskDto.getTaskDescription();
-
-
         mailSenderService.sendEmail(userEmail,taskTittle,taskDescription);
 
         return modelMapper.map(createdTask,TaskDto.class);

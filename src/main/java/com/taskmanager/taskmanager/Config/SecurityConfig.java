@@ -41,7 +41,8 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/webjars/**",
             "/swagger-ui/index.html",
-            "/swagger-ui.html"
+            "/swagger-ui.html",
+            "/api/user/delete/**"
     };
     @Autowired
     private JwtAuthenticationEntryPoint point;

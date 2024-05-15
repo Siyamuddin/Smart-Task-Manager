@@ -5,6 +5,7 @@ import com.taskmanager.taskmanager.Entity.Role;
 import com.taskmanager.taskmanager.Entity.Task;
 import com.taskmanager.taskmanager.Entity.User;
 import com.taskmanager.taskmanager.Exceptions.ResourceNotFoundException;
+import com.taskmanager.taskmanager.Exceptions.UserAlreadyExistException;
 import com.taskmanager.taskmanager.Payloads.TaskDto;
 import com.taskmanager.taskmanager.Payloads.UserDto;
 import com.taskmanager.taskmanager.Repository.RoleRepo;
@@ -14,6 +15,7 @@ import com.taskmanager.taskmanager.Services.UserServices;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,19 +46,40 @@ public class UserServicesImpl implements UserServices {
     @Override
     public UserDto registerNewUser(UserDto userDto) {
         User user=this.modelMapper.map(userDto,User.class);
-        //encoded password
-        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-        //roles
-        Role role= this.roleRepo.findById(AppConstants.NORMAL_USER).get();
-        user.getRoles().add(role);
-        User newUser=this.userRepo.save(user);
-        return this.modelMapper.map(newUser,UserDto.class);
+        Optional<User> checkUser=userRepo.findByEmail(userDto.getEmail());
+        if(checkUser.isEmpty())
+        {
+            //encoded password
+            user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+            if(userRepo.findAll().isEmpty())
+            {
+                Role role= this.roleRepo.findById(AppConstants.ADMIN_USER).get();
+                user.getRoles().add(role);
+            }
+            else
+            {
+                Role role= this.roleRepo.findById(AppConstants.NORMAL_USER).get();
+                user.getRoles().add(role);
+            }
+            //roles
+
+            User newUser=this.userRepo.save(user);
+            return this.modelMapper.map(newUser,UserDto.class);
+        }
+        else throw new UserAlreadyExistException(userDto.getFirstName()+" "+userDto.getLastName(),userDto.getEmail());
     }
     @Override
     public UserDto createUser(UserDto userDto) {
         User user=this.modelMapper.map(userDto,User.class);
-        User createdUser=this.userRepo.save(user);
-        return this.modelMapper.map(createdUser,UserDto.class);
+        Optional<User> checkUser=userRepo.findByEmail(userDto.getEmail());
+        if(checkUser.isEmpty())
+        {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            User createdUser=this.userRepo.save(user);
+            return this.modelMapper.map(createdUser,UserDto.class);
+        }
+        else throw new UserAlreadyExistException(userDto.getFirstName()+" "+userDto.getLastName(),userDto.getEmail());
+
     }
 
     @Override
@@ -83,6 +107,7 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
+    @Cacheable(cacheNames = "cache1",key = "'#key'")
     public List<UserDto> getAllUsers(Integer pageNumber, Integer pageSize, String sortBy, String sortDirect) {
         Sort sort=null;
         if(sortDirect.equalsIgnoreCase("asc"))
@@ -96,6 +121,7 @@ public class UserServicesImpl implements UserServices {
         Pageable pageable=PageRequest.of(pageNumber,pageSize,sort);
         Page<User> users=userRepo.findAll(pageable);
         List<UserDto> userDtos=users.stream().map((user)->modelMapper.map(user,UserDto.class)).collect(Collectors.toList());
+        System.out.println("Test:1");
         return userDtos;
     }
 

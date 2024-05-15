@@ -1,6 +1,8 @@
 package com.taskmanager.taskmanager.Payloads;
 
 import com.taskmanager.taskmanager.Entity.User;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,11 +10,13 @@ import lombok.Setter;
 import java.util.Date;
 
 public class TaskDto {
+    @NotEmpty(message = "Title must not be empty.")
     private String taskTitle;
+    @NotEmpty(message = "Title must not be empty.")
     private String taskDescription;
     private Date deadline;
+    @NotEmpty(message = "Title must not be empty.")
     private boolean isDone;
-    private UserDto user;
 
     public TaskDto() {
     }
@@ -49,11 +53,4 @@ public class TaskDto {
         isDone = done;
     }
 
-    public UserDto getUser() {
-        return user;
-    }
-
-    public void setUser(UserDto user) {
-        this.user = user;
-    }
 }

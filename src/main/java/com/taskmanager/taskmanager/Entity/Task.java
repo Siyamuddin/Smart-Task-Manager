@@ -26,6 +26,7 @@ public class Task {
     @UpdateTimestamp
     private Date timeWheUpdated;
     @ManyToOne
+            @JoinColumn(name = "user_Id")
     User user;
 
     public Task() {
