@@ -18,7 +18,7 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: 17
-
+#hi
       - name: Build the application
         run:
           mvn clean
