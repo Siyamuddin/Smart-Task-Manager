@@ -20,6 +20,6 @@ jobs:
           java-version: 17
 
       - name: Build the application
-        run: |
+        run:
           mvn clean
           mvn -B package --file pom.xml
