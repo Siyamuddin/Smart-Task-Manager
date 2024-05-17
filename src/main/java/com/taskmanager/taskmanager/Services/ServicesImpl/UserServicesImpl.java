@@ -47,7 +47,7 @@ public class UserServicesImpl implements UserServices {
     public UserDto registerNewUser(UserDto userDto) {
         User user=this.modelMapper.map(userDto,User.class);
         Optional<User> checkUser=userRepo.findByEmail(userDto.getEmail());
-        if(checkUser.isEmpty())
+        if(checkUser.get()==null)
         {
             //encoded password
             user.setPassword(this.passwordEncoder.encode(user.getPassword()));
@@ -72,7 +72,7 @@ public class UserServicesImpl implements UserServices {
     public UserDto createUser(UserDto userDto) {
         User user=this.modelMapper.map(userDto,User.class);
         Optional<User> checkUser=userRepo.findByEmail(userDto.getEmail());
-        if(checkUser.isEmpty())
+        if(checkUser.get()==null)
         {
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             User createdUser=this.userRepo.save(user);

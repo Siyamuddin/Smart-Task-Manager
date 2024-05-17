@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootApplication
@@ -38,7 +39,8 @@ public class TaskManagerApplication implements CommandLineRunner {
 			role1.setId(AppConstants.NORMAL_USER);
 			role1.setName("ROLE_NORMAL");
 
-			List<Role> roles=List.of(role,role1);
+			List<Role> roles = Arrays.asList(role, role1);
+
 			List<Role> result=this.roleRepo.saveAll(roles);
 			result.forEach(r->{
 				System.out.println(r.getName());
